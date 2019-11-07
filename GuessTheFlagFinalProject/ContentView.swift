@@ -22,6 +22,13 @@ struct ContentView: View {
     @State private var showingScore = false
     @State private var scoreTitle = ""
     @State private var myCountryName = ""
+    @State private var score = 0
+    @State private var myTextResult = ""
+    @State private var myAwesomeWrongTexts = ["Really Jorge??", "Oh well, your're stupid, aren't you?", "Anyway, back to school please!"]
+    @State private var myAwesomeCorrectTexts = ["Yeess! you're the fucking master!", "Awesome!, how's next?", "How many things do you do as goog as it?"]
+    let defualtText = "Your current score is "
+        
+    @State private var awesomePosition = 0
     
     func askQuestion(){
         countries.shuffle()
@@ -33,11 +40,25 @@ struct ContentView: View {
         
         myCountryName = countryName
         
+        awesomePosition = Int.random(in: 0...2)
+        
         if number == correctAnswer {
             scoreTitle = "Correct"
+            score += 1
+            
+            myTextResult = myAwesomeCorrectTexts[awesomePosition]
+            
         } else {
             scoreTitle = "Wrong"
+            
+           myTextResult =  myAwesomeWrongTexts[awesomePosition]
         }
+        
+        myTextResult =
+        """
+        \(myTextResult)
+        \(defualtText) \(score)
+        """
         
         showingScore = true
     }
@@ -74,7 +95,7 @@ struct ContentView: View {
       }
     }.alert(isPresented: $showingScore) {
           Alert(title: Text(scoreTitle),
-                message: Text("Your score is \(myCountryName) ?"),
+                message: Text(myTextResult),
                 dismissButton: .default(Text("Continue")) {
                   self.askQuestion()
           })
